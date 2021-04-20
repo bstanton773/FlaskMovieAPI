@@ -22,4 +22,4 @@ def search():
         response = search.movie(query=title)
         results = search.results
         
-    return render_template('index.html', form=form, results=results)
+    return render_template('search.html', form=form, results=results)

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Search Movies Here</h1>
+
+    <form action="{{ url_for('search') }}" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <fieldset>
+                {{ form.title.label }}
+                {{ form.title(class='form-control', placeholder='Enter Movie Title') }}
+            </fieldset>
+            {{ form.submit(class='btn btn-primary mt-2') }}
+        </div>
+    </form>
+
+    {% if results %}
+        <h4>There are results</h4>
+        {% for movie in results %}
+            <h6>{{ movie['title'] }}</h6>
+        {% endfor %}
+    {% endif %}
+
+{% endblock content %}
