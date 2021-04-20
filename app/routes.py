@@ -23,3 +23,9 @@ def search():
         results = search.results
         
     return render_template('search.html', form=form, results=results)
+
+
+@app.route('/movies/<int:id>')
+def movie_detail(id):
+    movie = tmdb.Movies(id).info()
+    return render_template('movie_detail.html', movie=movie)

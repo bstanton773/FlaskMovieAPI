@@ -1,0 +1,10 @@
+.movie{
+    max-width: 25vw;
+    height: auto;
+}
+
+.movie-search{
+    max-width: 15vw;
+    height: auto;
+    align-self: center;
+}

@@ -16,10 +16,25 @@
     </form>
 
     {% if results %}
-        <h4>There are results</h4>
-        {% for movie in results %}
-            <h6>{{ movie['title'] }}</h6>
-        {% endfor %}
+        <div class="row">
+            {% for movie in results %}
+            {% if movie['poster_path'] %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card mt-3">
+                    
+                    <img src="{{ 'https://image.tmdb.org/t/p/original' + movie['poster_path'] }}" class="card-img-top movie-search" alt="...">
+                    
+                    
+                    <div class="card-body vw-10">
+                      <h5 class="card-title">{{ movie['title'] }}</h5>
+                      <p class="card-text">{{ movie['release_date'][:4] }}</p>
+                      <a href="{{ url_for('movie_detail', id=movie['id'])}}" class="btn btn-primary">Read More</a>
+                    </div>
+                  </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
     {% endif %}
 
 {% endblock content %}
