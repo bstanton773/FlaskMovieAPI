@@ -9,10 +9,12 @@ from werkzeug.security import check_password_hash
 
 tmdb.API_KEY = os.environ.get('TMDB_API_KEY')
 
+
 @app.route('/')
 def index():
     form = SearchMovieForm()
     return render_template('index.html', form=form)
+
 
 @app.route('/search', methods=['GET','POST'])
 def search():
@@ -59,6 +61,8 @@ def signup():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     form = LoginForm()
     if request.method == 'POST' and form.validate():
         username = form.username.data
@@ -85,3 +89,10 @@ def logout():
     logout_user()
     flash("You have succesfully logged out", 'primary')
     return redirect(url_for('index'))
+
+
+@app.route('/watchlist')
+@login_required
+def watchlist():
+    watch_list = [tmdb.Movies(m_id).info() for m_id in current_user.watchlist]
+    return render_template('watchlist.html', watch_list=watch_list)
