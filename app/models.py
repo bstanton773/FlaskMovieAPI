@@ -13,9 +13,19 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(150), nullable=False, unique=True)
     email = db.Column(db.String(150), nullable=False, unique=True)
     password = db.Column(db.String(256), nullable=False)
+    watchlist = db.Column(db.ARRAY(db.Integer))
 
     def __init__(self, username, email, password):
         self.username = username
         self.email = email
         self.password = generate_password_hash(password)
+
+    def add_to_watchlist(self, movie_id):
+        if movie_id not in self.watchlist:
+            self.watchlist = self.watchlist + [movie_id]
+            db.session.commit()
+
+    def remove_from_watchlist(self, movie_id):
+        self.watchlist = [m_id for m_id in self.watchlist if m_id != movie_id]
+        db.session.commit()
     
