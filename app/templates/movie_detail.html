@@ -15,6 +15,12 @@
               <p class="card-text">{{ movie['overview'] }}</p>
               <p class="card-text"><small class="text-muted">{{ movie['release_date'][:4] }}</small></p>
               <a href="{{ 'https://www.imdb.com/title/' + movie['imdb_id'] }}" class="card-link" target="_blank">IMDB</a>
+              <div>
+                <form action="{{ url_for('add_to_watchlist', movie_id=movie['id']) }}" method="POST">
+                  <button type="submit" class="btn btn-primary">Add To Watchlist</button>
+                </form>
+                <a href="#"><button class="btn btn-info">Rate</button></a>
+              </div>
             </div>
           </div>
         </div>

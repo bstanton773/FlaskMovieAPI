@@ -96,3 +96,10 @@ def logout():
 def watchlist():
     watch_list = [tmdb.Movies(m_id).info() for m_id in current_user.watchlist]
     return render_template('watchlist.html', watch_list=watch_list)
+
+
+@app.route('/add-to-watchlist/<int:movie_id>', methods=['POST'])
+@login_required
+def add_to_watchlist(movie_id):
+    current_user.add_to_watchlist(movie_id)
+    return redirect(url_for('watchlist'))
