@@ -22,7 +22,6 @@ def search():
     search = tmdb.Search()
     results = None
     if request.method == 'POST' and form.validate():
-        print("HERE")
         title = form.title.data
         response = search.movie(query=title)
         results = search.results
@@ -102,4 +101,11 @@ def watchlist():
 @login_required
 def add_to_watchlist(movie_id):
     current_user.add_to_watchlist(movie_id)
+    return redirect(url_for('watchlist'))
+
+
+@app.route('/remove-from-watchlist/<int:movie_id>', methods=['POST'])
+@login_required
+def remove_from_watchlist(movie_id):
+    current_user.remove_from_watchlist(movie_id)
     return redirect(url_for('watchlist'))
