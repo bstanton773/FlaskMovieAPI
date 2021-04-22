@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, Email, EqualTo
 
 class SearchMovieForm(FlaskForm):
@@ -19,3 +19,8 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField()
+
+
+class RatingForm(FlaskForm):
+    rating = IntegerField('Rating', validators=[DataRequired()])
+    submit = SubmitField('Rate')
