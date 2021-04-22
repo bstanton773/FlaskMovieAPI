@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    {% for movie in my_ratings %}
+      {% if movie['poster_path'] %}
+      <div class="col-6 col-md-6 col-lg-4">
+          <div class="card mt-3">
+              
+              <img src="{{ 'https://image.tmdb.org/t/p/original' + movie['poster_path'] }}" class="card-img-top movie-search" alt="...">
+              
+              
+              <div class="card-body vw-10">
+                <h5 class="card-title">{{ movie['title'] }}</h5>
+                <p class="card-text">{{ movie['release_date'][:4] }}</p>
+                <p class="card-text">Rating: {{ movie['rating'] }}</p>
+                <form action="{{ url_for('remove_from_my_ratings', movie_id=movie['id']) }}" method="POST">
+                  <button type="submit" class="btn btn-danger">Remove From Ratings</button>
+                </form>
+              </div>
+            </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+</div>
+{% endblock content %}

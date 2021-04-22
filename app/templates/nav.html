@@ -13,9 +13,9 @@
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('search') }}">Search Movies</a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" href="#">Pricing</a>
-          </li>
+          </li> -->
         </ul>
         
         <span class="navbar-text">
@@ -26,8 +26,8 @@
                     My Account
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">My Info</a></li>
-                    <li><a class="dropdown-item" href="#">My Posts</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('watchlist') }}">Watchlist</a></li>
+                    <li><a class="dropdown-item" href="#">My Ratings</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
                     </ul>

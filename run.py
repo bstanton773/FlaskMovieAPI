@@ -1,9 +1,9 @@
 from app import app, db
-from app.models import User
+from app.models import User, Rating
 
 if __name__ == "__main__":
     app.run(debug=True)
 
 @app.shell_context_processor
 def make_context():
-    return {'db': db, 'User': User}
+    return {'db': db, 'User': User, 'Rating': Rating}
