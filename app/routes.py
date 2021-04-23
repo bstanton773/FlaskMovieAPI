@@ -47,7 +47,10 @@ def signup():
         email = form.email.data
         password = form.password.data
         # print(username, email, password)
-        
+        check_user = User.query.filter((User.username==username)|(User.email==email)).first()
+        if check_user:
+            flash("That username or email is already in use", 'warning')
+            return redirect('signup')
         # create a new instance of User
         new_user = User(username, email, password)
         # add new instance to our database
