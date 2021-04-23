@@ -79,9 +79,9 @@ def login():
         
         login_user(user, remember=form.remember_me.data)
         flash("You have successfully logged in!", 'success')
-        next_page = request.args.get('next')
-        if next_page:
-            return redirect(url_for(next_page.lstrip('/')))
+        # next_page = request.args.get('next')
+        # if next_page:
+        #     return redirect(url_for(next_page.lstrip('/')))
         return redirect(url_for('index'))
 
     return render_template('login.html', form=form)
