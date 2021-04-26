@@ -12,8 +12,10 @@ tmdb.API_KEY = os.environ.get('TMDB_API_KEY')
 
 @app.route('/')
 def index():
-    form = SearchMovieForm()
-    return render_template('index.html', form=form)
+    disc = tmdb.Discover()
+    disc.movie(sort_by='popularity.desc')
+    popular = disc.results
+    return render_template('index.html', popular=popular)
 
 
 @app.route('/search', methods=['GET','POST'])
