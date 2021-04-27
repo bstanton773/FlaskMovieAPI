@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Search Users Here</h1>
+
+    <form action="{{ url_for('search_users') }}" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <fieldset>
+                {{ form.username.label }}
+                {{ form.username(class='form-control', placeholder='Enter Username') }}
+            </fieldset>
+            {{ form.submit(class='btn btn-primary mt-2') }}
+        </div>
+    </form>
+
+    {% if users %}
+        <div class="row">
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">(Un)Follow</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <th scope="row"></th>
+                        <td>{{ user.username }}</td>
+                        <td>
+                            {% if not current_user.is_following(user) %}
+                                <a href="{{ url_for('follow', user_id=user.id) }}" class="btn btn-success">Follow</a>
+                            {% else %}
+                                <a href="{{ url_for('unfollow', user_id=user.id) }}" class="btn btn-warning">Unfollow</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock content %}
