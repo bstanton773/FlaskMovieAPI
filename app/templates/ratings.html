@@ -14,6 +14,7 @@
                 <h5 class="card-title">{{ movie['title'] }}</h5>
                 <p class="card-text">{{ movie['release_date'][:4] }}</p>
                 <p class="card-text">Rating: {{ movie['rating'] }}</p>
+                <a href="{{ url_for('movie_detail', id=movie['id'])}}" class="btn btn-primary">Read More</a>
                 <form action="{{ url_for('remove_from_my_ratings', movie_id=movie['id']) }}" method="POST">
                   <button type="submit" class="btn btn-danger">Remove From Ratings</button>
                 </form>

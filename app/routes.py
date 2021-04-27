@@ -2,7 +2,7 @@ import os
 from app import app, db
 from flask import render_template, request, flash, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
-from app.forms import SearchMovieForm, UserInfoForm, LoginForm, RatingForm
+from app.forms import SearchMovieForm, SearchUserForm, UserInfoForm, LoginForm, RatingForm
 from app.models import User, Rating
 import tmdbsimple as tmdb
 from werkzeug.security import check_password_hash
@@ -157,3 +157,44 @@ def remove_from_my_ratings(movie_id):
     db.session.delete(rating)
     db.session.commit()
     return redirect(url_for('my_ratings'))
+
+
+@app.route('/search-users', methods=['GET','POST'])
+@login_required
+def search_users():
+    form = SearchUserForm()
+    users = current_user.followed.all()
+    if request.method == 'POST' and form.validate():
+        username = form.username.data
+        search = f"%{username}%"
+        users = User.query.filter(User.username.ilike(search)).all()
+        
+    return render_template('search_users.html', form=form, users=users)
+
+
+@app.route('/follow')
+@login_required
+def follow():
+    user_id = request.args.get('user_id')
+    u = User.query.get(user_id)
+
+    current_user.follow(u)
+    flash(f'You have followed {u.username}', 'success')
+    return redirect(url_for('search_users'))
+
+
+@app.route('/unfollow')
+@login_required
+def unfollow():
+    user_id = request.args.get('user_id')
+    u = User.query.get(user_id)
+
+    current_user.unfollow(u)
+    flash(f'You have unfollowed {u.username}', 'info')
+    return redirect(url_for('search_users'))
+
+
+# @app.route('/following')
+# def following():
+#     users = current_user.followed.all()
+#     return render_template('search_users')
