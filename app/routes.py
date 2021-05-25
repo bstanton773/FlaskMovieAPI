@@ -4,30 +4,34 @@ from flask import render_template, request, flash, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import SearchMovieForm, SearchUserForm, UserInfoForm, LoginForm, RatingForm
 from app.models import User, Rating
+from app.wrappers import MovieRankings
 import tmdbsimple as tmdb
 from werkzeug.security import check_password_hash
 
 tmdb.API_KEY = os.environ.get('TMDB_API_KEY')
+movie_rank = MovieRankings()
 
-
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    disc = tmdb.Discover()
-    disc.movie(sort_by='popularity.desc')
-    popular = disc.results
-    return render_template('index.html', popular=popular)
+    movies = movie_rank.search_all(q='')[0]
+    form = SearchMovieForm()
+    if request.method == 'POST' and form.validate():
+        title = form.title.data
+        movies = movie_rank.search_all(q=title)[0]
+    return render_template('index.html', form=form, movies=movies)
 
 
 @app.route('/search', methods=['GET','POST'])
 def search():
     form = SearchMovieForm()
-    search = tmdb.Search()
+    # search = tmdb.Search()
     results = None
     if request.method == 'POST' and form.validate():
         title = form.title.data
-        response = search.movie(query=title)
-        results = search.results
-        
+        # search.movie(query=title)
+        # results = search.results
+        results = movie_rank.search_all(q=title)[0]
+        print(results)
     return render_template('search.html', form=form, results=results)
 
 
