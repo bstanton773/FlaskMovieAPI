@@ -110,6 +110,14 @@ def watchlist():
     return render_template('watchlist.html', watch_list=watch_list)
 
 
+@app.route('/watchlist/<int:user_id>')
+@login_required
+def follower_watchlist(user_id):
+    user = User.query.get_or_404(user_id)
+    watch_list = [tmdb.Movies(m_id).info() for m_id in user.watchlist]
+    return render_template('watchlist.html', watch_list=watch_list)
+
+
 @app.route('/add-to-watchlist/<int:movie_id>', methods=['POST'])
 @login_required
 def add_to_watchlist(movie_id):
@@ -128,6 +136,17 @@ def remove_from_watchlist(movie_id):
 @login_required
 def my_ratings():
     my_ratings = [tmdb.Movies(r.movie_id).info() for r in current_user.ratings]
+    for movie in range(len(my_ratings)):
+        my_ratings[movie]['rating'] = current_user.ratings[movie].rating
+    my_ratings = sorted(my_ratings, key=lambda x: x['rating'], reverse=True)
+    return render_template('ratings.html', my_ratings=my_ratings)
+
+
+@app.route('/ratings/<int:user_id>')
+@login_required
+def follower_ratings(user_id):
+    user = User.query.get_or_404(user_id)
+    my_ratings = [tmdb.Movies(r.movie_id).info() for r in user.ratings]
     for movie in range(len(my_ratings)):
         my_ratings[movie]['rating'] = current_user.ratings[movie].rating
     my_ratings = sorted(my_ratings, key=lambda x: x['rating'], reverse=True)

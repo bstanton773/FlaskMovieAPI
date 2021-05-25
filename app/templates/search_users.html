@@ -23,6 +23,8 @@
                         <th scope="col">#</th>
                         <th scope="col">Username</th>
                         <th scope="col">(Un)Follow</th>
+                        <th scope="col">See Watchlist</th>
+                        <th scope="col">See Ratings</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,6 +39,8 @@
                                 <a href="{{ url_for('unfollow', user_id=user.id) }}" class="btn btn-warning">Unfollow</a>
                             {% endif %}
                         </td>
+                        <td> <a href="{{ url_for('follower_watchlist', user_id=user.id) }}" class="btn btn-primary">Click Me</a></td>
+                        <td> <a href="{{ url_for('follower_ratings', user_id=user.id) }}" class="btn btn-primary">Click Me</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
