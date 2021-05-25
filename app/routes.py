@@ -139,7 +139,7 @@ def my_ratings():
     for movie in range(len(my_ratings)):
         my_ratings[movie]['rating'] = current_user.ratings[movie].rating
     my_ratings = sorted(my_ratings, key=lambda x: x['rating'], reverse=True)
-    return render_template('ratings.html', my_ratings=my_ratings)
+    return render_template('ratings.html', my_ratings=my_ratings, user=current_user)
 
 
 @app.route('/ratings/<int:user_id>')
@@ -148,9 +148,9 @@ def follower_ratings(user_id):
     user = User.query.get_or_404(user_id)
     my_ratings = [tmdb.Movies(r.movie_id).info() for r in user.ratings]
     for movie in range(len(my_ratings)):
-        my_ratings[movie]['rating'] = current_user.ratings[movie].rating
+        my_ratings[movie]['rating'] = user.ratings[movie].rating
     my_ratings = sorted(my_ratings, key=lambda x: x['rating'], reverse=True)
-    return render_template('ratings.html', my_ratings=my_ratings)
+    return render_template('ratings.html', my_ratings=my_ratings, user=user)
 
 
 @app.route('/add-to-my-ratings/<int:movie_id>', methods=['POST'])
