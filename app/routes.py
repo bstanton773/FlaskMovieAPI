@@ -4,30 +4,34 @@ from flask import render_template, request, flash, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import SearchMovieForm, SearchUserForm, UserInfoForm, LoginForm, RatingForm
 from app.models import User, Rating
+from app.wrappers import MovieRankings
 import tmdbsimple as tmdb
 from werkzeug.security import check_password_hash
 
 tmdb.API_KEY = os.environ.get('TMDB_API_KEY')
+movie_rank = MovieRankings()
 
-
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    disc = tmdb.Discover()
-    disc.movie(sort_by='popularity.desc')
-    popular = disc.results
-    return render_template('index.html', popular=popular)
+    movies = movie_rank.search_all(q='')[0]
+    form = SearchMovieForm()
+    if request.method == 'POST' and form.validate():
+        title = form.title.data
+        movies = movie_rank.search_all(q=title)[0]
+    return render_template('index.html', form=form, movies=movies)
 
 
 @app.route('/search', methods=['GET','POST'])
 def search():
     form = SearchMovieForm()
-    search = tmdb.Search()
+    # search = tmdb.Search()
     results = None
     if request.method == 'POST' and form.validate():
         title = form.title.data
-        response = search.movie(query=title)
-        results = search.results
-        
+        # search.movie(query=title)
+        # results = search.results
+        results = movie_rank.search_all(q=title)[0]
+        print(results)
     return render_template('search.html', form=form, results=results)
 
 
@@ -106,6 +110,23 @@ def watchlist():
     return render_template('watchlist.html', watch_list=watch_list)
 
 
+@app.route('/watchlist/<int:user_id>')
+@login_required
+def follower_watchlist(user_id):
+    user = User.query.get_or_404(user_id)
+    watch_list = [tmdb.Movies(m_id).info() for m_id in user.watchlist]
+    return render_template('watchlist.html', watch_list=watch_list, user=user)
+
+
+@app.route('/compare-watchlist/<int:user_id>')
+@login_required
+def compare_watchlist(user_id):
+    user = User.query.get_or_404(user_id)
+    combined_watch_list = set(user.watchlist) & set(current_user.watchlist)
+    watch_list = [tmdb.Movies(m_id).info() for m_id in combined_watch_list]
+    return render_template('watchlist.html', watch_list=watch_list, user=user)
+
+
 @app.route('/add-to-watchlist/<int:movie_id>', methods=['POST'])
 @login_required
 def add_to_watchlist(movie_id):
@@ -127,7 +148,18 @@ def my_ratings():
     for movie in range(len(my_ratings)):
         my_ratings[movie]['rating'] = current_user.ratings[movie].rating
     my_ratings = sorted(my_ratings, key=lambda x: x['rating'], reverse=True)
-    return render_template('ratings.html', my_ratings=my_ratings)
+    return render_template('ratings.html', my_ratings=my_ratings, user=current_user)
+
+
+@app.route('/ratings/<int:user_id>')
+@login_required
+def follower_ratings(user_id):
+    user = User.query.get_or_404(user_id)
+    my_ratings = [tmdb.Movies(r.movie_id).info() for r in user.ratings]
+    for movie in range(len(my_ratings)):
+        my_ratings[movie]['rating'] = user.ratings[movie].rating
+    my_ratings = sorted(my_ratings, key=lambda x: x['rating'], reverse=True)
+    return render_template('ratings.html', my_ratings=my_ratings, user=user)
 
 
 @app.route('/add-to-my-ratings/<int:movie_id>', methods=['POST'])
