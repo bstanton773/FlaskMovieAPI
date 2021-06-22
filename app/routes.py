@@ -115,7 +115,16 @@ def watchlist():
 def follower_watchlist(user_id):
     user = User.query.get_or_404(user_id)
     watch_list = [tmdb.Movies(m_id).info() for m_id in user.watchlist]
-    return render_template('watchlist.html', watch_list=watch_list)
+    return render_template('watchlist.html', watch_list=watch_list, user=user)
+
+
+@app.route('/compare-watchlist/<int:user_id>')
+@login_required
+def compare_watchlist(user_id):
+    user = User.query.get_or_404(user_id)
+    combined_watch_list = set(user.watchlist) & set(current_user.watchlist)
+    watch_list = [tmdb.Movies(m_id).info() for m_id in combined_watch_list]
+    return render_template('watchlist.html', watch_list=watch_list, user=user)
 
 
 @app.route('/add-to-watchlist/<int:movie_id>', methods=['POST'])

@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% if request.path.split('/')[1] == 'watchlist' %}
+<a href="{{ url_for('compare_watchlist', user_id=user.id) }}">
+  <button class="btn btn-primary mt-1">Compare with my list</button>
+</a>
+{% endif %}
+
 <div class="row">
     {% for movie in watch_list %}
       {% if movie['poster_path'] %}
