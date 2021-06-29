@@ -1,9 +1,22 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, IntegerField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, IntegerField, SelectMultipleField
 from wtforms.validators import DataRequired, Email, EqualTo
 
 class SearchMovieForm(FlaskForm):
-    title = StringField('Movie Title', validators=[DataRequired()])
+    title = StringField('Movie Title')
+    providers = SelectMultipleField('Streaming Providers', choices=[
+        ('9', 'Amazon Prime'), 
+        ('337', 'Disney +'), 
+        ('384', 'HBO Max'), 
+        ('15', 'Hulu'), 
+        ('8', 'Netflix'), 
+        ('531', 'Paramount +'), 
+        ('386', 'Peacock'),
+        ('387', 'Peacock Premium'),
+        ('37', 'Showtime'), 
+        ('43', 'Starz')
+        ])
+    runtime = IntegerField('Runtime', default='242')
     submit = SubmitField()
 
 

@@ -10,6 +10,10 @@
                 {{ form.title.label }}
                 {{ form.title(class='form-control', placeholder='Search Movie, Director, Actor, etc.') }}
             </fieldset>
+            <fieldset>
+                {{ form.providers.label }}
+                {{ form.providers(class='form-control') }}
+            </fieldset>
             {{ form.submit(class='btn btn-primary mt-2') }}
         </div>
     </form>
