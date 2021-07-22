@@ -17,21 +17,21 @@ def index():
     form = SearchMovieForm()
     if request.method == 'POST' and form.validate():
         title = form.title.data
-        movies = movie_rank.search_all(q=title)[0]
+        providers = '@'.join(form.providers.data)
+        genres = '@'.join(form.genres.data)
+        runtime = form.runtime.data
+        ratingrange = f'{form.rating.data}@100'
+        movies = movie_rank.search_all(q=title, providers=providers, genres=genres, runtime=runtime, ratingrange=ratingrange)[0]
     return render_template('index.html', form=form, movies=movies)
 
 
 @app.route('/search', methods=['GET','POST'])
 def search():
     form = SearchMovieForm()
-    # search = tmdb.Search()
     results = None
     if request.method == 'POST' and form.validate():
         title = form.title.data
-        # search.movie(query=title)
-        # results = search.results
         results = movie_rank.search_all(q=title)[0]
-        print(results)
     return render_template('search.html', form=form, results=results)
 
 
