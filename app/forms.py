@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, IntegerField, SelectMultipleField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, IntegerField, SelectMultipleField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo
 
 class SearchMovieForm(FlaskForm):
@@ -15,8 +15,31 @@ class SearchMovieForm(FlaskForm):
         ('387', 'Peacock Premium'),
         ('37', 'Showtime'), 
         ('43', 'Starz')
-        ])
-    runtime = IntegerField('Runtime', default='242')
+    ])
+    genres = SelectMultipleField('Genres', choices=[
+        ('Action', 'Action'),
+        ('Adventure', 'Adventure'),
+        ('Animation', 'Animation'),
+        ('Anime', 'Anime'),
+        ('Comedy', 'Comedy'),
+        ('Comic', 'Comic'),
+        ('Crime', 'Crime'),
+        ('Disaster', 'Disaster'),
+        ('Drama', 'Drama'),
+        ('Dramedy', 'Dramedy'),
+        ('Fantasy', 'Fantasy'),
+        ('Horror', 'Horror'),
+        ('Musical', 'Musical'),
+        ('Mystery', 'Mystery'),
+        ('RomCom', 'RomCom'),
+        ('Romance', 'Romance'),
+        ('Sci-Fi', 'Sci-Fi'),
+        ('Sports', 'Sports'),
+        ('Thriller', 'Thriller'),
+        ('Western', 'Western')
+    ])
+    runtime = SelectField('Runtime <', choices=[(i, i) for i in range(242,0,-1)])
+    rating = SelectField('Rating >', choices=[(i,i) for i in range(100)])
     submit = SubmitField()
 
 

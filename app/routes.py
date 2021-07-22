@@ -18,7 +18,10 @@ def index():
     if request.method == 'POST' and form.validate():
         title = form.title.data
         providers = '@'.join(form.providers.data)
-        movies = movie_rank.search_all(q=title, providers=providers)[0]
+        genres = '@'.join(form.genres.data)
+        runtime = form.runtime.data
+        ratingrange = f'{form.rating.data}@100'
+        movies = movie_rank.search_all(q=title, providers=providers, genres=genres, runtime=runtime, ratingrange=ratingrange)[0]
     return render_template('index.html', form=form, movies=movies)
 
 
