@@ -1,6 +1,6 @@
 import os
-from app import app, db
-from flask import render_template, request, flash, redirect, url_for
+from app import db
+from flask import current_app as app, render_template, request, flash, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import SearchMovieForm, SearchUserForm, UserInfoForm, LoginForm, RatingForm
 from app.models import User, Rating
@@ -10,6 +10,8 @@ from werkzeug.security import check_password_hash
 
 tmdb.API_KEY = os.environ.get('TMDB_API_KEY')
 movie_rank = MovieRankings()
+
+# MAIN
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -24,17 +26,19 @@ def index():
         movies = movie_rank.search_all(q=title, providers=providers, genres=genres, runtime=runtime, ratingrange=ratingrange)[0]
     return render_template('index.html', form=form, movies=movies)
 
+########################
+# I think this can go! #
+########################    
+# @app.route('/search', methods=['GET','POST'])
+# def search():
+#     form = SearchMovieForm()
+#     results = None
+#     if request.method == 'POST' and form.validate():
+#         title = form.title.data
+#         results = movie_rank.search_all(q=title)[0]
+#     return render_template('search.html', form=form, results=results)
 
-@app.route('/search', methods=['GET','POST'])
-def search():
-    form = SearchMovieForm()
-    results = None
-    if request.method == 'POST' and form.validate():
-        title = form.title.data
-        results = movie_rank.search_all(q=title)[0]
-    return render_template('search.html', form=form, results=results)
-
-
+# Movie
 @app.route('/movies/<int:id>')
 def movie_detail(id):
     movie = tmdb.Movies(id).info()
@@ -44,7 +48,7 @@ def movie_detail(id):
         user_ratings = [r.movie_id for r in current_user.ratings]
     return render_template('movie_detail.html', movie=movie, form=form, user_ratings=user_ratings)
 
-
+# Auth
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = UserInfoForm()
@@ -102,7 +106,7 @@ def logout():
     flash("You have succesfully logged out", 'primary')
     return redirect(url_for('index'))
 
-
+# Watchlist
 @app.route('/watchlist')
 @login_required
 def watchlist():
@@ -140,7 +144,7 @@ def remove_from_watchlist(movie_id):
     current_user.remove_from_watchlist(movie_id)
     return redirect(url_for('watchlist'))
 
-
+# Ratings
 @app.route('/my-ratings')
 @login_required
 def my_ratings():
