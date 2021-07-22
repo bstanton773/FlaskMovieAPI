@@ -22,4 +22,7 @@ def create_app(config_class=Config):
     with app.app_context():
         from app import routes, models
 
+        from app.blueprints.auth import bp as auth
+        app.register_blueprint(auth)
+
     return app

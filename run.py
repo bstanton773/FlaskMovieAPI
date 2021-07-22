@@ -1,5 +1,6 @@
 from app import create_app, db
-from app.models import User, Rating
+from app.blueprints.auth.models import User
+from app.models import Rating
 import tmdbsimple
 from app.wrappers import MovieRankings
 

@@ -30,15 +30,15 @@
                     <li><a class="dropdown-item" href="{{ url_for('my_ratings') }}">My Ratings</a></li>
                     <li><a class="dropdown-item" href="{{ url_for('search_users') }}">Following</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
                     </ul>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a>
+                    <a class="nav-link" href="{{ url_for('auth.signup') }}">Sign Up</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
                 </li>
                 {% endif %}
             </ul>
