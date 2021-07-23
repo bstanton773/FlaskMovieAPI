@@ -41,8 +41,3 @@ class SearchMovieForm(FlaskForm):
     runtime = SelectField('Runtime <', choices=[(i, i) for i in range(242,0,-1)])
     rating = SelectField('Rating >', choices=[(i,i) for i in range(100)])
     submit = SubmitField()
-
-
-class SearchUserForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    submit = SubmitField()

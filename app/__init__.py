@@ -25,10 +25,13 @@ def create_app(config_class=Config):
         from app.blueprints.auth import bp as auth
         app.register_blueprint(auth)
 
-        from app.blueprints.watchlist import bp as watchlist
-        app.register_blueprint(watchlist)
+        from app.blueprints.movies import bp as movie
+        app.register_blueprint(movie)
 
         from app.blueprints.ratings import bp as ratings
         app.register_blueprint(ratings)
+
+        from app.blueprints.watchlist import bp as watchlist
+        app.register_blueprint(watchlist)
 
     return app

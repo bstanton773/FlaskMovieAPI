@@ -2,7 +2,7 @@ from flask import request, flash, render_template, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from . import bp as auth
-from .forms import UserInfoForm, LoginForm
+from .forms import UserInfoForm, LoginForm, SearchUserForm
 from .models import User
 from werkzeug.security import check_password_hash
 
@@ -63,3 +63,38 @@ def logout():
     logout_user()
     flash("You have succesfully logged out", 'primary')
     return redirect(url_for('index'))
+
+
+@auth.route('/search-users', methods=['GET','POST'])
+@login_required
+def search_users():
+    form = SearchUserForm()
+    users = current_user.followed.all()
+    if request.method == 'POST' and form.validate():
+        username = form.username.data
+        search = f"%{username}%"
+        users = User.query.filter(User.username.ilike(search)).all()
+        
+    return render_template('search_users.html', form=form, users=users)
+
+
+@auth.route('/follow')
+@login_required
+def follow():
+    user_id = request.args.get('user_id')
+    u = User.query.get(user_id)
+
+    current_user.follow(u)
+    flash(f'You have followed {u.username}', 'success')
+    return redirect(url_for('auth.search_users'))
+
+
+@auth.route('/unfollow')
+@login_required
+def unfollow():
+    user_id = request.args.get('user_id')
+    u = User.query.get(user_id)
+
+    current_user.unfollow(u)
+    flash(f'You have unfollowed {u.username}', 'info')
+    return redirect(url_for('auth.search_users'))

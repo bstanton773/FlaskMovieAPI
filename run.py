@@ -1,8 +1,8 @@
 from app import create_app, db
 from app.blueprints.auth.models import User
+from app.blueprints.movies.wrappers import MovieRankings
 from app.blueprints.ratings.models import Rating
 import tmdbsimple
-from app.wrappers import MovieRankings
 
 app = create_app()
 

@@ -54,7 +54,7 @@
                 <div class="card-body vw-10">
                     <h5 class="card-title">{{ movie['title'] }}</h5>
                     <p class="card-text">{{ movie['year'] }}</p>
-                    <a href="{{ url_for('movie_detail', id=movie['id'])}}" class="btn btn-primary">Read More</a>
+                    <a href="{{ url_for('movies.movie_detail', id=movie['id'])}}" class="btn btn-primary">Read More</a>
                 </div>
                 </div>
         </div>
