@@ -20,7 +20,7 @@ def create_app(config_class=Config):
     login.login_view = 'login'
 
     with app.app_context():
-        from app import routes, models
+        from app import routes
 
         from app.blueprints.auth import bp as auth
         app.register_blueprint(auth)
