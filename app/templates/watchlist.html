@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% if request.path.split('/')[1] == 'watchlist' %}
-<a href="{{ url_for('compare_watchlist', user_id=user.id) }}">
+{% if request.path.split('/')[2] == 'watchlist' %}
+<a href="{{ url_for('watchlist.compare_watchlist', user_id=user.id) }}">
   <button class="btn btn-primary mt-1">Compare with my list</button>
 </a>
 {% endif %}
@@ -19,7 +19,7 @@
               <div class="card-body vw-10">
                 <h5 class="card-title">{{ movie['title'] }}</h5>
                 <p class="card-text">{{ movie['release_date'][:4] }}</p>
-                <a href="{{ url_for('movie_detail', id=movie['id'])}}" class="btn btn-primary">Read More</a>
+                <a href="{{ url_for('movies.movie_detail', id=movie['id'])}}" class="btn btn-primary">Read More</a>
               </div>
             </div>
       </div>
