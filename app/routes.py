@@ -4,6 +4,7 @@ from flask import current_app as app, render_template, request, flash, redirect,
 from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import SearchMovieForm, SearchUserForm, RatingForm
 from app.models import Rating
+from app.blueprints.auth.models import User
 from app.wrappers import MovieRankings
 import tmdbsimple as tmdb
 
@@ -107,42 +108,42 @@ def movie_detail(id):
 #     return redirect(url_for('index'))
 
 # Watchlist
-@app.route('/watchlist')
-@login_required
-def watchlist():
-    watch_list = [tmdb.Movies(m_id).info() for m_id in current_user.watchlist]
-    return render_template('watchlist.html', watch_list=watch_list)
+# @app.route('/watchlist')
+# @login_required
+# def watchlist():
+#     watch_list = [tmdb.Movies(m_id).info() for m_id in current_user.watchlist]
+#     return render_template('watchlist.html', watch_list=watch_list)
 
 
-@app.route('/watchlist/<int:user_id>')
-@login_required
-def follower_watchlist(user_id):
-    user = User.query.get_or_404(user_id)
-    watch_list = [tmdb.Movies(m_id).info() for m_id in user.watchlist]
-    return render_template('watchlist.html', watch_list=watch_list, user=user)
+# @app.route('/watchlist/<int:user_id>')
+# @login_required
+# def follower_watchlist(user_id):
+#     user = User.query.get_or_404(user_id)
+#     watch_list = [tmdb.Movies(m_id).info() for m_id in user.watchlist]
+#     return render_template('watchlist.html', watch_list=watch_list, user=user)
 
 
-@app.route('/compare-watchlist/<int:user_id>')
-@login_required
-def compare_watchlist(user_id):
-    user = User.query.get_or_404(user_id)
-    combined_watch_list = set(user.watchlist) & set(current_user.watchlist)
-    watch_list = [tmdb.Movies(m_id).info() for m_id in combined_watch_list]
-    return render_template('watchlist.html', watch_list=watch_list, user=user)
+# @app.route('/compare-watchlist/<int:user_id>')
+# @login_required
+# def compare_watchlist(user_id):
+#     user = User.query.get_or_404(user_id)
+#     combined_watch_list = set(user.watchlist) & set(current_user.watchlist)
+#     watch_list = [tmdb.Movies(m_id).info() for m_id in combined_watch_list]
+#     return render_template('watchlist.html', watch_list=watch_list, user=user)
 
 
-@app.route('/add-to-watchlist/<int:movie_id>', methods=['POST'])
-@login_required
-def add_to_watchlist(movie_id):
-    current_user.add_to_watchlist(movie_id)
-    return redirect(url_for('watchlist'))
+# @app.route('/add-to-watchlist/<int:movie_id>', methods=['POST'])
+# @login_required
+# def add_to_watchlist(movie_id):
+#     current_user.add_to_watchlist(movie_id)
+#     return redirect(url_for('watchlist'))
 
 
-@app.route('/remove-from-watchlist/<int:movie_id>', methods=['POST'])
-@login_required
-def remove_from_watchlist(movie_id):
-    current_user.remove_from_watchlist(movie_id)
-    return redirect(url_for('watchlist'))
+# @app.route('/remove-from-watchlist/<int:movie_id>', methods=['POST'])
+# @login_required
+# def remove_from_watchlist(movie_id):
+#     current_user.remove_from_watchlist(movie_id)
+#     return redirect(url_for('watchlist'))
 
 # Ratings
 @app.route('/my-ratings')

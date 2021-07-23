@@ -39,7 +39,7 @@
                                 <a href="{{ url_for('unfollow', user_id=user.id) }}" class="btn btn-warning">Unfollow</a>
                             {% endif %}
                         </td>
-                        <td> <a href="{{ url_for('follower_watchlist', user_id=user.id) }}" class="btn btn-primary">Click Me</a></td>
+                        <td> <a href="{{ url_for('watchlist.follower_watchlist', user_id=user.id) }}" class="btn btn-primary">Click Me</a></td>
                         <td> <a href="{{ url_for('follower_ratings', user_id=user.id) }}" class="btn btn-primary">Click Me</a></td>
                     </tr>
                     {% endfor %}
