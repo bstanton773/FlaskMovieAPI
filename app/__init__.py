@@ -28,4 +28,7 @@ def create_app(config_class=Config):
         from app.blueprints.watchlist import bp as watchlist
         app.register_blueprint(watchlist)
 
+        from app.blueprints.ratings import bp as ratings
+        app.register_blueprint(ratings)
+
     return app

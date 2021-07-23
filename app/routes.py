@@ -1,10 +1,9 @@
 import os
-from app import db
 from flask import current_app as app, render_template, request, flash, redirect, url_for
-from flask_login import login_user, logout_user, login_required, current_user
-from app.forms import SearchMovieForm, SearchUserForm, RatingForm
-from app.models import Rating
+from flask_login import login_required, current_user
+from app.forms import SearchMovieForm, SearchUserForm
 from app.blueprints.auth.models import User
+from app.blueprints.ratings.forms import RatingForm
 from app.wrappers import MovieRankings
 import tmdbsimple as tmdb
 
@@ -146,54 +145,54 @@ def movie_detail(id):
 #     return redirect(url_for('watchlist'))
 
 # Ratings
-@app.route('/my-ratings')
-@login_required
-def my_ratings():
-    my_ratings = [tmdb.Movies(r.movie_id).info() for r in current_user.ratings]
-    for movie in range(len(my_ratings)):
-        my_ratings[movie]['rating'] = current_user.ratings[movie].rating
-    my_ratings = sorted(my_ratings, key=lambda x: x['rating'], reverse=True)
-    return render_template('ratings.html', my_ratings=my_ratings, user=current_user)
+# @app.route('/my-ratings')
+# @login_required
+# def my_ratings():
+#     my_ratings = [tmdb.Movies(r.movie_id).info() for r in current_user.ratings]
+#     for movie in range(len(my_ratings)):
+#         my_ratings[movie]['rating'] = current_user.ratings[movie].rating
+#     my_ratings = sorted(my_ratings, key=lambda x: x['rating'], reverse=True)
+#     return render_template('ratings.html', my_ratings=my_ratings, user=current_user)
 
 
-@app.route('/ratings/<int:user_id>')
-@login_required
-def follower_ratings(user_id):
-    user = User.query.get_or_404(user_id)
-    my_ratings = [tmdb.Movies(r.movie_id).info() for r in user.ratings]
-    for movie in range(len(my_ratings)):
-        my_ratings[movie]['rating'] = user.ratings[movie].rating
-    my_ratings = sorted(my_ratings, key=lambda x: x['rating'], reverse=True)
-    return render_template('ratings.html', my_ratings=my_ratings, user=user)
+# @app.route('/ratings/<int:user_id>')
+# @login_required
+# def follower_ratings(user_id):
+#     user = User.query.get_or_404(user_id)
+#     my_ratings = [tmdb.Movies(r.movie_id).info() for r in user.ratings]
+#     for movie in range(len(my_ratings)):
+#         my_ratings[movie]['rating'] = user.ratings[movie].rating
+#     my_ratings = sorted(my_ratings, key=lambda x: x['rating'], reverse=True)
+#     return render_template('ratings.html', my_ratings=my_ratings, user=user)
 
 
-@app.route('/add-to-my-ratings/<int:movie_id>', methods=['POST'])
-@login_required
-def add_to_my_ratings(movie_id):
-    form = RatingForm()
-    if form.validate():
-        rating = form.rating.data
-        already_rated = Rating.query.filter_by(movie_id=movie_id, user_id=current_user.id).first()
-        if already_rated:
-            already_rated.rating = rating
-        else:
-            new_rating = Rating(current_user.id, movie_id, rating)
-            db.session.add(new_rating)
-        db.session.commit()
+# @app.route('/add-to-my-ratings/<int:movie_id>', methods=['POST'])
+# @login_required
+# def add_to_my_ratings(movie_id):
+#     form = RatingForm()
+#     if form.validate():
+#         rating = form.rating.data
+#         already_rated = Rating.query.filter_by(movie_id=movie_id, user_id=current_user.id).first()
+#         if already_rated:
+#             already_rated.rating = rating
+#         else:
+#             new_rating = Rating(current_user.id, movie_id, rating)
+#             db.session.add(new_rating)
+#         db.session.commit()
 
-    return redirect(url_for('my_ratings'))
+#     return redirect(url_for('my_ratings'))
 
 
-@app.route('/remove-from-my-ratings/<int:movie_id>', methods=['POST'])
-@login_required
-def remove_from_my_ratings(movie_id):
-    rating = Rating.query.filter_by(movie_id=movie_id, user_id=current_user.id).first()
-    if not rating:
-        flash("You are not the owner of this rating", 'danger')
-        return redirect(url_for('my_ratings'))
-    db.session.delete(rating)
-    db.session.commit()
-    return redirect(url_for('my_ratings'))
+# @app.route('/remove-from-my-ratings/<int:movie_id>', methods=['POST'])
+# @login_required
+# def remove_from_my_ratings(movie_id):
+#     rating = Rating.query.filter_by(movie_id=movie_id, user_id=current_user.id).first()
+#     if not rating:
+#         flash("You are not the owner of this rating", 'danger')
+#         return redirect(url_for('my_ratings'))
+#     db.session.delete(rating)
+#     db.session.commit()
+#     return redirect(url_for('my_ratings'))
 
 
 @app.route('/search-users', methods=['GET','POST'])

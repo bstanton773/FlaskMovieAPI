@@ -63,6 +63,6 @@ class SearchUserForm(FlaskForm):
 #     submit = SubmitField()
 
 
-class RatingForm(FlaskForm):
-    rating = IntegerField('Rating', validators=[DataRequired()])
-    submit = SubmitField('Rate')
+# class RatingForm(FlaskForm):
+#     rating = IntegerField('Rating', validators=[DataRequired()])
+#     submit = SubmitField('Rate')

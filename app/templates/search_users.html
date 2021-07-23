@@ -40,7 +40,7 @@
                             {% endif %}
                         </td>
                         <td> <a href="{{ url_for('watchlist.follower_watchlist', user_id=user.id) }}" class="btn btn-primary">Click Me</a></td>
-                        <td> <a href="{{ url_for('follower_ratings', user_id=user.id) }}" class="btn btn-primary">Click Me</a></td>
+                        <td> <a href="{{ url_for('ratings.follower_ratings', user_id=user.id) }}" class="btn btn-primary">Click Me</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
