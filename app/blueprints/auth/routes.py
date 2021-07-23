@@ -28,14 +28,14 @@ def signup():
         # Send email to new user
 
         flash("You have succesfully signed up!", "success")
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     return render_template('signup.html', form=form)
 
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     form = LoginForm()
     if request.method == 'POST' and form.validate():
         username = form.username.data
@@ -52,7 +52,7 @@ def login():
         # next_page = request.args.get('next')
         # if next_page:
         #     return redirect(url_for(next_page.lstrip('/')))
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
 
     return render_template('login.html', form=form)
 
@@ -62,7 +62,7 @@ def login():
 def logout():
     logout_user()
     flash("You have succesfully logged out", 'primary')
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 
 
 @auth.route('/search-users', methods=['GET','POST'])

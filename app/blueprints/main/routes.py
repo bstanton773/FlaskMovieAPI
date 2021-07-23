@@ -1,4 +1,5 @@
-from flask import current_app as app, render_template, request
+from . import bp as main
+from flask import render_template, request
 from app.blueprints.movies.forms import SearchMovieForm
 from app.blueprints.movies.wrappers import MovieRankings
 
@@ -7,7 +8,7 @@ movie_rank = MovieRankings()
 
 # MAIN
 
-@app.route('/', methods=['GET', 'POST'])
+@main.route('/', methods=['GET', 'POST'])
 def index():
     movies = movie_rank.search_all(q='')[0]
     form = SearchMovieForm()
