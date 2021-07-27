@@ -1,10 +1,10 @@
-from app import app, db
-from app.models import User, Rating
+from app import create_app, db
+from app.blueprints.auth.models import User
+from app.blueprints.movies.wrappers import MovieRankings
+from app.blueprints.ratings.models import Rating
 import tmdbsimple
-from app.wrappers import MovieRankings
 
-if __name__ == "__main__":
-    app.run(debug=True)
+app = create_app()
 
 @app.shell_context_processor
 def make_context():

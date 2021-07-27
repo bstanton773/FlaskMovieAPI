@@ -17,16 +17,16 @@
               <a href="{{ 'https://www.imdb.com/title/' + movie['imdb_id'] }}" class="card-link" target="_blank">IMDB</a>
               <div>
                 {% if movie['id'] not in current_user.watchlist and movie['id'] not in user_ratings %}
-                  <form action="{{ url_for('add_to_watchlist', movie_id=movie['id']) }}" method="POST">
+                  <form action="{{ url_for('watchlist.add_to_watchlist', movie_id=movie['id']) }}" method="POST">
                     <button type="submit" class="btn btn-primary">Add To Watchlist</button>
                   </form>
                 {% elif movie['id'] not in user_ratings %}
-                  <form action="{{ url_for('remove_from_watchlist', movie_id=movie['id']) }}" method="POST">
+                  <form action="{{ url_for('watchlist.remove_from_watchlist', movie_id=movie['id']) }}" method="POST">
                     <button type="submit" class="btn btn-danger">Remove From Watchlist</button>
                   </form>
                 {% endif %}
 
-                <form action="{{ url_for('add_to_my_ratings', movie_id=movie['id']) }}" method="POST">
+                <form action="{{ url_for('ratings.add_to_my_ratings', movie_id=movie['id']) }}" method="POST">
                   {{ form.hidden_tag() }}
                   <div class="form-group">
                     <fieldset>
