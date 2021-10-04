@@ -2,7 +2,7 @@ import httpx
 
 class MovieRankings():
     def __init__(self):
-        self.base_url = "https://jdlmoviedb.xyz/reviews/"
+        self.base_url = "https://tmrdb.tmrdb.com/reviews/"
         self.base_header = {
             'accept': 'application/json, text/plain, */*',
             'origin': 'https://www.movierankings.net'
