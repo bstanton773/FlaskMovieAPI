@@ -2,43 +2,66 @@
 
 {% block content %}
 
-      <div class="card mb-3">
+    <div class="card mb-3">
         <div class="row g-0">
-          <div class="col-md-2">
-            {% if movie['poster_path'] %}
-                <img src="{{ 'https://image.tmdb.org/t/p/original' + movie['poster_path'] }}" class="card-img-top movie align-self-center" alt="{{ movie['title'] }}">
-            {% endif %}
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">{{ movie['title'] }}</h5>
-              <p class="card-text">{{ movie['overview'] }}</p>
-              <p class="card-text"><small class="text-muted">{{ movie['release_date'][:4] }}</small></p>
-              <a href="{{ 'https://www.imdb.com/title/' + movie['imdb_id'] }}" class="card-link" target="_blank">IMDB</a>
-              <div>
-                {% if movie['id'] not in current_user.watchlist and movie['id'] not in user_ratings %}
-                  <form action="{{ url_for('watchlist.add_to_watchlist', movie_id=movie['id']) }}" method="POST">
-                    <button type="submit" class="btn btn-primary">Add To Watchlist</button>
-                  </form>
-                {% elif movie['id'] not in user_ratings %}
-                  <form action="{{ url_for('watchlist.remove_from_watchlist', movie_id=movie['id']) }}" method="POST">
-                    <button type="submit" class="btn btn-danger">Remove From Watchlist</button>
-                  </form>
+            <div class="col-md-2">
+                {% if movie['poster'] %}
+                <img src="{{ 'https://image.tmdb.org/t/p/original' + movie['poster'] }}" class="card-img-top movie align-self-center" alt="{{ movie['title'] }}">
                 {% endif %}
-
-                <form action="{{ url_for('ratings.add_to_my_ratings', movie_id=movie['id']) }}" method="POST">
-                  {{ form.hidden_tag() }}
-                  <div class="form-group">
-                    <fieldset>
-                      {{ form.rating.label }}
-                      {{ form.rating(class="form-control", placeholder="1-100")}}
-                    </fieldset>
-                    {{ form.submit(class="btn btn-info") }}
-                  </div>
-                </form>
-              </div>
             </div>
-          </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ movie['movie'] }}</h5>
+                    <p class="card-text">{{ movie['plot'] }}</p>
+                    <p class="card-text"><small class="text-muted">{{ movie['year'] }}</small></p>
+                    <h6 class="card-title text-center">Where to Stream</h6>
+                    <div class="row">
+                        {% for provider in streaming %}
+                        <div class="col-4">
+                            <a href="{{ provider['url'] }}" target="_blank" rel="noopener noreferrer">Here</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <h6 class="card-title text-center">Similar Movies</h6>
+                    <div class="row">
+                        {% for rec in recommendations %}
+                        <div class="col-3">
+                        <div class="card">
+                            <img src="{{  'https://image.tmdb.org/t/p/original' +  rec['poster'] }}" class="card-img-top" alt="{{ rec['movie'] }}">
+                            <div class="card-body">
+                            <h5 class="card-title">{{ rec['movie'] }}</h5>
+                            <a href="{{ url_for('movies.movie_detail', id=rec['id']) }}" class="btn btn-primary">Check Out</a>
+                            </div>
+                        </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div>
+                    {% if movie['id'] not in current_user.watchlist and movie['id'] not in user_ratings %}
+                    <form action="{{ url_for('watchlist.add_to_watchlist', movie_id=movie['id']) }}" method="POST">
+                        <button type="submit" class="btn btn-primary">Add To Watchlist</button>
+                    </form>
+                    {% elif movie['id'] not in user_ratings %}
+                    <form action="{{ url_for('watchlist.remove_from_watchlist', movie_id=movie['id']) }}" method="POST">
+                        <button type="submit" class="btn btn-danger">Remove From Watchlist</button>
+                    </form>
+                    {% endif %}
+
+                    <form action="{{ url_for('ratings.add_to_my_ratings', movie_id=movie['id']) }}" method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="form-group">
+                            <fieldset>
+                            {{ form.rating.label }}
+                            {{ form.rating(class="form-control", placeholder="1-100")}}
+                            </fieldset>
+                            {{ form.submit(class="btn btn-info") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
+    </div>
 {% endblock content %}

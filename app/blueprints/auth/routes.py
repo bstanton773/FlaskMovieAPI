@@ -45,7 +45,7 @@ def login():
 
         if user is None or not check_password_hash(user.password, password):
             flash("Incorrect Email/Password. Please try again", 'danger')
-            return redirect(url_for('login'))
+            return redirect(url_for('auth.login'))
         
         login_user(user, remember=form.remember_me.data)
         flash("You have successfully logged in!", 'success')
