@@ -44,6 +44,30 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f'<User {self.id} | {self.username} >'
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'watchlist': self.watchlist
+        }
+
+    def from_dict(self, data):
+        for field in ['username', 'email', 'password']:
+            if field in data:
+                if field == 'password':
+                    self.password = generate_password_hash(data[field])
+                else:
+                    setattr(self, field, data[field])
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
     def follow(self, user):
         if not self.is_following(user):
             self.followed.append(user)
