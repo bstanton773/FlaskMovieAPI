@@ -75,6 +75,8 @@ class MovieRankings():
             headers['providers'] = '@'.join([self.providers[p] for p in kwargs['providers']])
         if kwargs['genres']:
             headers['genres'] = '@'.join([str(g) for g in kwargs['genres']])
+        if kwargs['years']:
+            headers['years'] = '@'.join([str(y) for y in kwargs['years']])
         res = self._get(url, headers)
         if res.status_code == 200:
             return res.json()
