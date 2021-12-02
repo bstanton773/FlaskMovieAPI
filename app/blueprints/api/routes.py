@@ -1,4 +1,5 @@
 from app.blueprints.auth.models import User
+from app.blueprints.movies.wrappers import MovieRankings
 from . import bp as api
 from flask import jsonify, request, url_for
 
@@ -83,3 +84,22 @@ def delete_user(user_id):
         'status': 'ok',
         'message': 'User deleted'
     })
+
+
+####################
+# API MOVIE ROUTES #
+####################
+
+# Movie Wrapper
+movie_rank = MovieRankings()
+
+# Main Movie route
+@api.route('/movies', methods=['GET'])
+def get_movies():
+    data = request.args
+    search = data.get('search', '')
+    providers = data.get('providers', '')
+    genres = data.get('genres', '')
+    movies = movie_rank.search_all(q=search, providers=providers.split(', '), genres=genres)[0]
+    return jsonify(movies)
+    

@@ -30,6 +30,19 @@ class MovieRankings():
             'universes': '',
             'years': ''
         }
+        self.providers = {
+            '': '',
+            'Amazon Prime': '9', 
+            'Disney+': '337', 
+            'HBO Max': '384', 
+            'Hulu': '15', 
+            'Netflix': '8', 
+            'Paramount+': '531', 
+            'Peacock': '386', 
+            'Peacock Premium': '387', 
+            'Showtime': '37', 
+            'Starz': '43'
+        }
         
     def _get(self, url, headers={}):
         response = httpx.get(url, headers=headers)
@@ -58,6 +71,10 @@ class MovieRankings():
         headers = self.search_header.copy()
         for key, value in kwargs.items():
             headers[key] = str(value)
+        if kwargs['providers']:
+            headers['providers'] = '@'.join([self.providers[p] for p in kwargs['providers']])
+        if kwargs['genres']:
+            headers['genres'] = '@'.join([str(g) for g in kwargs['genres']])
         res = self._get(url, headers)
         if res.status_code == 200:
             return res.json()
