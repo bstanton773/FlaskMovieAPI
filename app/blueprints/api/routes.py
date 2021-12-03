@@ -105,4 +105,21 @@ def get_movies():
     years = [y for y in range(int(min_year), int(max_year)+1)]
     movies = movie_rank.search_all(q=search, providers=providers, genres=genres, years=years)[0]
     return jsonify(movies)
+
+
+# Get single movie
+@api.route('/movies/<int:movie_id>', methods=['GET'])
+def get_movie(movie_id):
+    movie_info = movie_rank.get_movie_info(movie_id)
+    if not movie_info:
+        return jsonify({
+            'status': 'error',
+            'message': 'Movie not found'
+        }), 404
+    movie = {
+        'movie_info': movie_info[0],
+        'providers': movie_info[1],
+        'recommendations': movie_info[2]
+    }
+    return jsonify(movie)
     
