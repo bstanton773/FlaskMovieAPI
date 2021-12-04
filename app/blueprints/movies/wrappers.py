@@ -71,11 +71,11 @@ class MovieRankings():
         headers = self.search_header.copy()
         for key, value in kwargs.items():
             headers[key] = str(value)
-        if kwargs['providers']:
+        if kwargs.get('providers'):
             headers['providers'] = '@'.join([self.providers[p] for p in kwargs['providers']])
-        if kwargs['genres']:
+        if kwargs.get('genres'):
             headers['genres'] = '@'.join([str(g) for g in kwargs['genres']])
-        if kwargs['years']:
+        if kwargs.get('years'):
             headers['years'] = '@'.join([str(y) for y in kwargs['years']])
         res = self._get(url, headers)
         if res.status_code == 200:
