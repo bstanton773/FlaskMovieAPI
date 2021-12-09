@@ -103,8 +103,9 @@ def get_movies():
     genres = data.get('genres', '').split(', ')
     min_year = data.get('minYear', '1960')
     max_year = data.get('maxYear', '2021')
+    sort_by = data.get('sortBy', 'rating@ASC')
     years = [y for y in range(int(min_year), int(max_year)+1)]
-    movies = movie_rank.search_all(q=search, providers=providers, genres=genres, years=years, skip=page)[0]
+    movies = movie_rank.search_all(q=search, providers=providers, genres=genres, years=years, skip=page, sort=sort_by)[0]
     return jsonify(movies)
 
 
