@@ -1,5 +1,8 @@
+import os
+import base64
+from datetime import datetime,  timedelta
 from app import db, login
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from flask_sqlalchemy import BaseQuery
 
@@ -28,6 +31,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(256), nullable=False)
     watchlist = db.Column(db.ARRAY(db.Integer), default=[])
     ratings = db.relationship('Rating', backref='user', lazy=True)
+    token = db.Column(db.String(32), unique=True, index=True)
+    token_expiration = db.Column(db.DateTime)
     followed = db.relationship(
         'User', secondary=followers,
         primaryjoin=(followers.c.follower_id == id),
@@ -68,6 +73,13 @@ class User(db.Model, UserMixin):
         db.session.delete(self)
         db.session.commit()
 
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+        self.save()
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
     def follow(self, user):
         if not self.is_following(user):
             self.followed.append(user)
@@ -89,3 +101,12 @@ class User(db.Model, UserMixin):
     def remove_from_watchlist(self, movie_id):
         self.watchlist = [m_id for m_id in self.watchlist if m_id != movie_id]
         db.session.commit()
+
+    def get_token(self, expires_in=3600):
+        now = datetime.utcnow()
+        if self.token and self.token_expiration > now + timedelta(minutes=1):
+            return self.token
+        self.token = base64.b64encode(os.urandom(24)).decode('utf-8')
+        self.token_expiration = now + timedelta(seconds=expires_in)
+        db.session.commit()
+        return self.token

@@ -2,8 +2,10 @@ from app.blueprints.auth.models import User
 from app.blueprints.movies.wrappers import MovieRankings
 from . import bp as api
 from flask import jsonify, request, url_for
+from app.blueprints.api.http_auth import basic_auth, token_auth
 
 @api.route('/')
+@basic_auth.login_required
 def index():
     return jsonify({
         'status': 'ok',
@@ -85,6 +87,13 @@ def delete_user(user_id):
         'message': 'User deleted'
     })
 
+# Get token
+@api.route('/token')
+@basic_auth.login_required
+def get_token():
+    user = basic_auth.current_user()
+    token = user.get_token()
+    return jsonify({'token': token})
 
 ####################
 # API MOVIE ROUTES #
