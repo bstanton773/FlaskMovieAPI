@@ -60,6 +60,7 @@ def creat_user():
 
 # Update user
 @api.route('/users/<int:user_id>', methods=['PUT'])
+@token_auth.login_required
 def update_user(user_id):
     user = User.query.get(user_id)
     if not user:
@@ -74,6 +75,7 @@ def update_user(user_id):
 
 # Delete user
 @api.route('/users/<int:user_id>', methods=['DELETE'])
+@token_auth.login_required
 def delete_user(user_id):
     user = User.query.get(user_id)
     if not user:
@@ -133,4 +135,15 @@ def get_movie(movie_id):
         'recommendations': movie_info[2]
     }
     return jsonify(movie)
-    
+
+
+########################
+# API WATCHLIST ROUTES #
+########################
+
+@api.route('/watchlist')
+@token_auth.login_required
+def get_watchlist():
+    current_user = token_auth.current_user()
+    watch_list = [movie_rank.get_movie_info(m_id)[0] for m_id in current_user.watchlist]
+    return jsonify(watch_list)
