@@ -147,3 +147,25 @@ def get_watchlist():
     current_user = token_auth.current_user()
     watch_list = [movie_rank.get_movie_info(m_id)[0] for m_id in current_user.watchlist]
     return jsonify(watch_list)
+
+
+@api.route('/add-to-watchlist/<int:movie_id>', methods=['POST'])
+@token_auth.login_required
+def add_to_watchlist(movie_id):
+    current_user = token_auth.current_user()
+    current_user.add_to_watchlist(movie_id)
+    return jsonify({
+            'status': 'success',
+            'message': 'Your watchlist has been updated'
+        })
+
+
+@api.route('/remove-from-watchlist/<int:movie_id>', methods=['DELETE'])
+@token_auth.login_required
+def remove_from_watchlist(movie_id):
+    current_user = token_auth.current_user()
+    current_user.remove_from_watchlist(movie_id)
+    return jsonify({
+            'status': 'success',
+            'message': 'Your watchlist has been updated'
+        })
