@@ -2,8 +2,10 @@ from app.blueprints.auth.models import User
 from app.blueprints.movies.wrappers import MovieRankings
 from . import bp as api
 from flask import jsonify, request, url_for
+from app.blueprints.api.http_auth import basic_auth, token_auth
 
 @api.route('/')
+@basic_auth.login_required
 def index():
     return jsonify({
         'status': 'ok',
@@ -58,6 +60,7 @@ def creat_user():
 
 # Update user
 @api.route('/users/<int:user_id>', methods=['PUT'])
+@token_auth.login_required
 def update_user(user_id):
     user = User.query.get(user_id)
     if not user:
@@ -72,6 +75,7 @@ def update_user(user_id):
 
 # Delete user
 @api.route('/users/<int:user_id>', methods=['DELETE'])
+@token_auth.login_required
 def delete_user(user_id):
     user = User.query.get(user_id)
     if not user:
@@ -85,6 +89,13 @@ def delete_user(user_id):
         'message': 'User deleted'
     })
 
+# Get token
+@api.route('/token')
+@basic_auth.login_required
+def get_token():
+    user = basic_auth.current_user()
+    token = user.get_token()
+    return jsonify({'token': token})
 
 ####################
 # API MOVIE ROUTES #
@@ -98,13 +109,14 @@ movie_rank = MovieRankings()
 def get_movies():
     data = request.args
     search = data.get('search', '')
-    page = data.get('page', 1)
+    page = int(data.get('page', 1)) - 1
     providers = data.get('providers', '').split(', ')
     genres = data.get('genres', '').split(', ')
     min_year = data.get('minYear', '1960')
     max_year = data.get('maxYear', '2021')
+    sort_by = data.get('sortBy', 'rating@ASC')
     years = [y for y in range(int(min_year), int(max_year)+1)]
-    movies = movie_rank.search_all(q=search, providers=providers, genres=genres, years=years, page=page)[0]
+    movies = movie_rank.search_all(q=search, providers=providers, genres=genres, years=years, skip=page, sort=sort_by)[0]
     return jsonify(movies)
 
 
@@ -123,4 +135,37 @@ def get_movie(movie_id):
         'recommendations': movie_info[2]
     }
     return jsonify(movie)
-    
+
+
+########################
+# API WATCHLIST ROUTES #
+########################
+
+@api.route('/watchlist')
+@token_auth.login_required
+def get_watchlist():
+    current_user = token_auth.current_user()
+    watch_list = [movie_rank.get_movie_info(m_id)[0] for m_id in current_user.watchlist]
+    return jsonify(watch_list)
+
+
+@api.route('/add-to-watchlist/<int:movie_id>', methods=['POST'])
+@token_auth.login_required
+def add_to_watchlist(movie_id):
+    current_user = token_auth.current_user()
+    current_user.add_to_watchlist(movie_id)
+    return jsonify({
+            'status': 'success',
+            'message': 'Your watchlist has been updated'
+        })
+
+
+@api.route('/remove-from-watchlist/<int:movie_id>', methods=['DELETE'])
+@token_auth.login_required
+def remove_from_watchlist(movie_id):
+    current_user = token_auth.current_user()
+    current_user.remove_from_watchlist(movie_id)
+    return jsonify({
+            'status': 'success',
+            'message': 'Your watchlist has been updated'
+        })
