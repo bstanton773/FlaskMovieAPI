@@ -95,7 +95,10 @@ def delete_user(user_id):
 def get_token():
     user = basic_auth.current_user()
     token = user.get_token()
-    return jsonify({'token': token})
+    return jsonify({
+        'token': token,
+        'token_expiration': user.token_expiration
+        })
 
 ####################
 # API MOVIE ROUTES #
