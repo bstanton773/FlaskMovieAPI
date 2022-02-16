@@ -100,6 +100,14 @@ def get_token():
         'token_expiration': user.token_expiration
         })
 
+
+# Get me
+@api.route('/me')
+@token_auth.login_required
+def get_me():
+    user = token_auth.current_user()
+    return jsonify(user.to_dict())
+
 ####################
 # API MOVIE ROUTES #
 ####################
