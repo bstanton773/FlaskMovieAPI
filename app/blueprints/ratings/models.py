@@ -16,3 +16,10 @@ class Rating(db.Model):
 
     def __repr__(self):
         return f'<Rating {self.id} | {self.movie_id}>'
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'movie_id': self.movie_id,
+            'rating': self.rating
+        }

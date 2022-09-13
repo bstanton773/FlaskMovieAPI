@@ -180,3 +180,40 @@ def remove_from_watchlist(movie_id):
             'status': 'success',
             'message': 'Your watchlist has been updated'
         })
+
+
+########################
+# API RATINGS ROUTES #
+########################
+
+@api.route('/my-ratings')
+@token_auth.login_required
+def get_my_ratings():
+    current_user = token_auth.current_user()
+    my_ratings = [movie_rank.get_movie_info(r.movie_id)[0] for r in current_user.ratings]
+    for movie in range(len(my_ratings)):
+        my_ratings[movie]['rating'] = current_user.ratings[movie].rating
+    my_ratings = sorted(my_ratings, key=lambda x: x['rating'], reverse=True)
+    return jsonify(my_ratings)
+
+
+@api.route('/add-to-my-ratings/<int:movie_id>', methods=['POST'])
+@token_auth.login_required
+def add_to_my_ratings(movie_id):
+    current_user = token_auth.current_user()
+    current_user.add_to_my_ratings(movie_id)
+    return jsonify({
+            'status': 'success',
+            'message': 'Your my-ratings has been updated'
+        })
+
+
+@api.route('/remove-from-my-ratings/<int:movie_id>', methods=['DELETE'])
+@token_auth.login_required
+def remove_from_my_ratings(movie_id):
+    current_user = token_auth.current_user()
+    current_user.remove_from_my_ratings(movie_id)
+    return jsonify({
+            'status': 'success',
+            'message': 'Your my-ratings has been updated'
+        })

@@ -54,7 +54,8 @@ class User(db.Model, UserMixin):
             'id': self.id,
             'username': self.username,
             'email': self.email,
-            'watchlist': self.watchlist
+            'watchlist': self.watchlist,
+            'ratings': [r.to_dict() for r in self.ratings]
         }
 
     def from_dict(self, data):
